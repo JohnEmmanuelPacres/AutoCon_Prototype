@@ -1,0 +1,24 @@
+# Virtual Environments
+.venv/
+venv/
+env/
+
+# Python Bytecode & Caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Secrets & Environment Variables (Gemini API keys)
+.env
+.env.*
+.streamlit/secrets.toml
+
+# Editor & OS Artifacts
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local 3D model test files
+*.stl
