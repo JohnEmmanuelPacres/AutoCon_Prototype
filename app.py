@@ -78,7 +78,23 @@ FILAMENT_TYPES = [
     "Bambu ABS",
     "Bambu ASA",
     "Bambu TPU 95A",
-    "Bambu PAHT-CF (Nylon Carbon Fiber)"
+    "Bambu PAHT-CF (Nylon Carbon Fiber)",
+    "Generic PLA",
+    "Generic PETG",
+    "Generic ABS",
+    "Generic TPU",
+    "Generic Nylon",
+    "Generic ASA",
+    "Generic PC",
+    "Generic PEEK",
+    "Generic PP",
+    "Generic HIPS",
+    "Generic Wood-Filled PLA",
+    "Generic Metal-Filled PLA",
+    "Generic Carbon-Filled PLA",
+    "Generic Flexible Filament (TPE/TPC)",
+    "Generic High-Temperature Filament (PEEK, PEI, PPSU)",
+    "Generic Composite Filament (CF, GF, Metal, Wood, etc.)"
 ]
 
 # --- HELPER FUNCTION: ANALYZE STL ---
