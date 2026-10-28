@@ -3,8 +3,12 @@ import trimesh
 import tempfile
 import os
 import json
+from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+
+# --- LOAD ENVIRONMENT VARIABLES ---
+load_dotenv()
 
 # --- PAGE CONFIGURATION ---
 st.set_page_config(page_title="Bambu Studio AI Config Generator", layout="wide")
@@ -110,7 +114,8 @@ def analyze_stl(uploaded_file):
 
 # --- HELPER FUNCTION: CALL GEMINI API FOR BAMBU STUDIO JSON ---
 def generate_bambu_json(api_key, gemini_model, printer_brand, printer_model, printer_specs, filament, stl_stats, user_notes):
-    client = genai.Client(api_key=api_key)
+    # Pass explicit API key if available; otherwise genai.Client picks up GEMINI_API_KEY from environment
+    client = genai.Client(api_key=api_key) if api_key else genai.Client()
     
     profile_name = f"AI_{printer_model}_{filament.split()[1]}_{stl_stats['filename'].split('.')[0]}"
     
@@ -178,7 +183,15 @@ st.markdown("Upload your `.stl` model, select your printer and filament, and let
 # Sidebar for Gemini API Key & Model Selection
 with st.sidebar:
     st.header("Gemini Agent Setup")
-    api_key = st.text_input("Gemini API Key", type="password", help="Get your API key from Google AI Studio (aistudio.google.com)")
+    env_api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY") or ""
+    api_key = st.text_input(
+        "Gemini API Key",
+        value=env_api_key,
+        type="password",
+        help="Loaded automatically from .env if configured (GEMINI_API_KEY / GOOGLE_API_KEY), or enter manually. Get your key from Google AI Studio (aistudio.google.com)"
+    )
+    if env_api_key:
+        st.caption("✅ Loaded API key from `.env`")
     
     gemini_model = st.selectbox(
         "Gemini Model",
@@ -244,13 +257,14 @@ with col2:
     
     # Generate Button
     if st.button("Generate Bambu Studio .JSON Preset", type="primary", use_container_width=True, disabled=(not uploaded_stl)):
-        if not api_key:
-            st.error("Please enter your Gemini API Key in the sidebar first.")
+        effective_key = api_key.strip() if api_key else (os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY") or "")
+        if not effective_key:
+            st.error("Please enter your Gemini API Key in the sidebar or define GEMINI_API_KEY in your `.env` file.")
         else:
             with st.spinner(f"{gemini_model} is crafting your Bambu Studio JSON preset..."):
                 try:
                     json_content, reasoning = generate_bambu_json(
-                        api_key, gemini_model, brand, model, printer_specs, filament, stl_stats, user_notes
+                        effective_key, gemini_model, brand, model, printer_specs, filament, stl_stats, user_notes
                     )
                     st.session_state["json_output"] = json_content
                     st.session_state["ai_reasoning"] = reasoning

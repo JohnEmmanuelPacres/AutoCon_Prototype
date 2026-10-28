@@ -83,6 +83,13 @@ Configuring 3D printer slicing parameters manually requires balancing structural
    pip install -r requirements.txt
    ```
 
+4. **(Optional) Configure environment variables:**
+   Copy `.env.example` to `.env` and set your API key:
+   ```bash
+   cp .env.example .env
+   ```
+   Set `GEMINI_API_KEY=your_gemini_api_key` inside `.env`.
+
 ---
 
 ## Usage
@@ -92,7 +99,7 @@ Configuring 3D printer slicing parameters manually requires balancing structural
    streamlit run app.py
    ```
 2. **Configure API Credentials & Model:**
-   - Enter your **Google Gemini API Key** in the sidebar.
+   - If `GEMINI_API_KEY` is defined in `.env`, it will load automatically. Otherwise, enter your API key in the sidebar.
    - Choose a Gemini model:
      - `gemini-2.5-flash`: Fast response, ideal for rapid iterations.
      - `gemini-2.5-pro`: Advanced reasoning for complex geometry or engineering materials.
